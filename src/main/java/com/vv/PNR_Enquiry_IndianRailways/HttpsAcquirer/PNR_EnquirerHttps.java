@@ -69,7 +69,9 @@ public class PNR_EnquirerHttps {
                 int lineNo = 1;
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
-                    logger.info("Line number " + (lineNo++) + " --> " + line);
+                    if(lineNo>=606 && lineNo<=692)
+                    logger.info("Line number " + lineNo + " --> " + line);
+                    lineNo++;
                 }
                 bufferedReader.close();
             }

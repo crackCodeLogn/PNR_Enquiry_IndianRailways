@@ -7,6 +7,18 @@
     <groupId>com.vv.PNR_Enquiry_IndianRailways</groupId>
     <artifactId>PNR_Enquiry_IndianRailways</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
         <!-- The following slf4j dependencies were invoked for the purpose of using slf4j for logging, but due to some reasons, i had to refrain from using them actively...
