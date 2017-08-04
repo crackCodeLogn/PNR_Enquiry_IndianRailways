@@ -1,5 +1,9 @@
 package com.vv.PNR_Enquiry_IndianRailways.GUI;
 
+import com.vv.PNR_Enquiry_IndianRailways.MapOfClassOfTravel;
+import com.vv.PNR_Enquiry_IndianRailways.Model.Passenger;
+import com.vv.PNR_Enquiry_IndianRailways.Model.PassengerList;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -21,7 +25,7 @@ public class PNR_Form {
 
     private JPanel mainPanel;
 
-    public PNR_Form() {
+    public PNR_Form(String pnr, String trainNumber, String trainName, String boardingStation, String destinationStation, String boardingDate, String classOfTravel, String chartStatus, PassengerList listOfPassengers) {
         //super(new GridBagLayout());
         mainPanel = new JPanel();
         mainPanel.setLayout(new GridBagLayout());
@@ -38,12 +42,13 @@ public class PNR_Form {
         JTextField displayValuePNR = new JTextField(20);
         gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridwidth = 3;
+        gbc.gridwidth = 1;
         gbc.gridx = 1;
         gbc.gridy = 0;
-        gbc.insets = new Insets(5, 10, 0, 10);
+        gbc.insets = new Insets(5, 10, 0, 200);
         gbc.weightx = 1;
         displayValuePNR.setEditable(false);
+        displayValuePNR.setText(pnr);
         mainPanel.add(displayValuePNR, gbc);
 
         JLabel displayTrainNumber = new JLabel("Train Number");
@@ -62,9 +67,10 @@ public class PNR_Form {
         gbc.gridwidth = 1;
         gbc.gridx = 1;
         gbc.gridy = 1;
-        gbc.insets = new Insets(5, 10, 0, 150);
+        gbc.insets = new Insets(5, 10, 0, 200);
         gbc.weightx = 1;
         displayValueTrainNumber.setEditable(false);
+        displayValueTrainNumber.setText(trainNumber);
         mainPanel.add(displayValueTrainNumber, gbc);
 
         /*
@@ -98,6 +104,7 @@ public class PNR_Form {
         gbc.insets = new Insets(5, 10, 10, 10);
         gbc.weightx = 1;
         displayValueTrainName.setEditable(false);
+        displayValueTrainName.setText(trainName);
         mainPanel.add(displayValueTrainName, gbc);
 
         JLabel displaySRC = new JLabel("From");
@@ -108,6 +115,7 @@ public class PNR_Form {
         gbc.gridy = 3;
         gbc.insets = new Insets(0, 10, 8, 0);
         gbc.weightx = 1;
+        displaySRC.setText(boardingStation);
         mainPanel.add(displaySRC, gbc);
 
         JLabel displayTo = new JLabel("To");
@@ -120,7 +128,7 @@ public class PNR_Form {
         gbc.weightx = 1;
         mainPanel.add(displayTo, gbc);
 
-        JLabel displayDEST = new JLabel("Dest");
+        JLabel displayDest = new JLabel("Dest");
         gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.EAST;
         gbc.gridwidth = 2;
@@ -128,7 +136,8 @@ public class PNR_Form {
         gbc.gridy = 3;
         gbc.insets = new Insets(0, 10, 8, 50);
         gbc.weightx = 1;
-        mainPanel.add(displayDEST, gbc);
+        displayDest.setText(destinationStation);
+        mainPanel.add(displayDest, gbc);
 
         JLabel displayBoardingDate = new JLabel("Boarding Date");
         gbc = new GridBagConstraints();
@@ -146,9 +155,10 @@ public class PNR_Form {
         gbc.gridwidth = 1;
         gbc.gridx = 1;
         gbc.gridy = 4;
-        gbc.insets = new Insets(5, 10, 0, 150);
+        gbc.insets = new Insets(5, 10, 0, 200);
         gbc.weightx = 1;
         displayValueBoardingDate.setEditable(false);
+        displayValueBoardingDate.setText(boardingDate);
         mainPanel.add(displayValueBoardingDate, gbc);
 
         JLabel displayClass = new JLabel("Class");
@@ -168,9 +178,11 @@ public class PNR_Form {
         gbc.gridx = 1;
         gbc.gridy = 5;
         //gbc.insets = new Insets(5, 10, 8, 10);
-        gbc.insets = new Insets(5, 10, 8, 100);
+        gbc.insets = new Insets(5, 10, 8, 200);
         gbc.weightx = 1;
         displayValueClass.setEditable(false);
+        classOfTravel+=" -- "+MapOfClassOfTravel.getMap().get(classOfTravel);
+        displayValueClass.setText(classOfTravel);
         mainPanel.add(displayValueClass, gbc);
 
         JLabel displayChart = new JLabel("Chart");
@@ -192,15 +204,25 @@ public class PNR_Form {
         gbc.insets = new Insets(5, -30, 8, 10);
         gbc.weightx = 1;
         displayValueChart.setEditable(false);
+        displayValueChart.setText(chartStatus);
         mainPanel.add(displayValueChart, gbc);
 
-        String rows[][] = {{"1", "B2", "B2"},
-                {"2", "B3", "B3"}};
+        //String rows[][] = {{"1", "B2", "B2"},
+        //                   {"2", "B3", "B3"}};
+        int sizeOfListOfPassengers = listOfPassengers.getListOfPassengers().size();
+        System.out.println("List of passengers from the gui part : "+sizeOfListOfPassengers);
+        String rows[][] = new String[sizeOfListOfPassengers][3];
+        for(int i=0; i<sizeOfListOfPassengers; i++){
+            rows[i][0] = String.valueOf(listOfPassengers.getListOfPassengers().get(i).getNumber());
+            rows[i][1] = listOfPassengers.getListOfPassengers().get(i).getBookingStatus();
+            rows[i][2] = listOfPassengers.getListOfPassengers().get(i).getCurrentStatus();
+        }
+
         String columns[] = {"Number", "Booking Status", "Current Status"};
         JTable displayTable = new JTable(rows, columns);
         JScrollPane scrollPane = new JScrollPane(displayTable);
         Dimension d = displayTable.getPreferredSize();
-        scrollPane.setPreferredSize(new Dimension(d.width, displayTable.getRowHeight() * 10 + 1));
+        scrollPane.setPreferredSize(new Dimension(d.width, displayTable.getRowHeight() * (sizeOfListOfPassengers + 3)));
 
         //displayTable.setBounds(30, 40, 100, 20);
         gbc = new GridBagConstraints();
@@ -240,6 +262,7 @@ public class PNR_Form {
         return mainPanel;
     }
 
+    /*
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -248,12 +271,12 @@ public class PNR_Form {
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setLocationRelativeTo(null);
                 frame.getContentPane().add(new PNR_Form().getUI());
+
                 // Create and set up the content pane.
                 /*
                 JComponent newContentPane = new PNR_Sample();
                 newContentPane.setOpaque(true); // content panes must be opaque
                 frame.setContentPane(newContentPane);
-                */
 
                 // Display the window.
                 frame.pack();
@@ -262,4 +285,5 @@ public class PNR_Form {
             }
         });
     }
+    */
 }
