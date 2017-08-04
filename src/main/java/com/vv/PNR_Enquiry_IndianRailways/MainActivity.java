@@ -19,16 +19,24 @@ import java.net.MalformedURLException;
  */
 public class MainActivity extends JFrame {
 
+    static final JTextField textPNR = new JTextField(10);
+    static JButton buttonSearch;
+    static JButton buttonCancel;
+    static JButton buttonReset;
+
+    public static boolean disableAll = false;
+
     public MainActivity() {
         setTitle("PNR Enquirer");
         setLayout(new FlowLayout());
-        JLabel displayPNR = new JLabel("Enter the PNR ");
+
+        final JLabel displayPNR = new JLabel("Enter the PNR ");
         add(displayPNR);
 
-        final JTextField textPNR = new JTextField(10);
+        //textPNR = new JTextField(10);
         add(textPNR);
 
-        JButton buttonSearch = new JButton("SEARCH");
+        buttonSearch = new JButton("SEARCH");
         buttonSearch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -36,17 +44,20 @@ public class MainActivity extends JFrame {
                 if (pnr.length()!=0) {
                     if (isPNR_Valid(pnr)) {
                         try {
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        new PNR_EnquirerHttps(pnr);
-                                    } catch (IOException e1) {
-                                        e1.printStackTrace();
+                            if(!disableAll) {
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            disableAll = true;
+                                            performDisabling();
+                                            new PNR_EnquirerHttps(pnr);
+                                        } catch (IOException e1) {
+                                            e1.printStackTrace();
+                                        }
                                     }
-                                }
-                            }).start();
-
+                                }).start();
+                            }
                         } catch (Exception e1){
                             System.out.println("Exception occured : "+e1);
                         }
@@ -66,7 +77,7 @@ public class MainActivity extends JFrame {
         });
         add(buttonSearch);
 
-        JButton buttonCancel = new JButton("CANCEL");
+        buttonCancel = new JButton("CANCEL");
         buttonCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -75,7 +86,7 @@ public class MainActivity extends JFrame {
         });
         add(buttonCancel);
 
-        JButton buttonReset = new JButton("RESET");
+        buttonReset = new JButton("RESET");
         buttonReset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -96,6 +107,20 @@ public class MainActivity extends JFrame {
             if (i == 10) isValid = true;
         }
         return isValid;
+    }
+
+    private void performDisabling(){
+        textPNR.setEnabled(false);
+        buttonSearch.setEnabled(false);
+        buttonCancel.setEnabled(false);
+        buttonReset.setEnabled(false);
+    }
+
+    public static void performEnabling(){
+        textPNR.setEnabled(true);
+        buttonSearch.setEnabled(true);
+        buttonCancel.setEnabled(true);
+        buttonReset.setEnabled(true);
     }
 
     public static void main(String[] args) {
