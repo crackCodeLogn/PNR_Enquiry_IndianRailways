@@ -1,9 +1,16 @@
 package com.vv.PNR_Enquiry_IndianRailways;
 
+import com.vv.PNR_Enquiry_IndianRailways.HttpsAcquirer.PNR_EnquirerHttps;
+import jdk.nashorn.internal.objects.NativeUint16Array;
+import sun.applet.Main;
+
 import javax.swing.*;
+import javax.tools.Tool;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.MalformedURLException;
 
 /**
  * @author Vivek
@@ -25,12 +32,35 @@ public class MainActivity extends JFrame {
         buttonSearch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String pnr = textPNR.getText();
-                if (pnr != null) {
+                final String pnr = textPNR.getText();
+                if (pnr.length()!=0) {
                     if (isPNR_Valid(pnr)) {
+                        try {
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        new PNR_EnquirerHttps(pnr);
+                                    } catch (IOException e1) {
+                                        e1.printStackTrace();
+                                    }
+                                }
+                            }).start();
 
-
+                        } catch (Exception e1){
+                            System.out.println("Exception occured : "+e1);
+                        }
                     }
+                    else{
+                        System.out.println("Invalid PNR!");
+                        Toolkit.getDefaultToolkit().beep();
+                        JOptionPane.showMessageDialog(MainActivity.this, "Invalid PNR!!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                else {
+                    System.out.println("Empty!");
+                    Toolkit.getDefaultToolkit().beep();
+                    JOptionPane.showMessageDialog(MainActivity.this, "PNR length can't be 0!!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
