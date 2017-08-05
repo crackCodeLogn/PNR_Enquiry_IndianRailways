@@ -9,10 +9,10 @@ import com.vv.PNR_Enquiry_IndianRailways.MainActivity;
 import com.vv.PNR_Enquiry_IndianRailways.MapOfClassOfTravel;
 import com.vv.PNR_Enquiry_IndianRailways.Model.Passenger;
 import com.vv.PNR_Enquiry_IndianRailways.Model.PassengerList;
-import sun.applet.Main;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,6 +20,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.vv.PNR_Enquiry_IndianRailways.MainActivity.smallLogoPath;
 
 /**
  * This deals with the Https Acquirer for the pnr request...
@@ -31,8 +33,16 @@ import java.util.List;
 public class PNR_EnquirerHttps {
 
     //private static Logger log = LoggerFactory.getLogger(PNR_EnquirerHttps.class); //slf4j one
+    //public static boolean loopON = true;
+    public PNR_EnquirerHttps(final String requestedPNR) {
+        try {
+            PNR_EnquirerHttpsRunner(requestedPNR);
+        } catch (IOException e) {
 
-    public PNR_EnquirerHttps(final String requestedPNR) throws MalformedURLException, IOException {
+        }
+    }
+
+    public void PNR_EnquirerHttpsRunner(final String requestedPNR) throws MalformedURLException, IOException {
         java.util.logging.Logger logger = java.util.logging.Logger.getLogger(PNR_EnquirerHttps.class.getName());
         new MapOfClassOfTravel();
         //initializing the map which stores the class and their corresponding description
@@ -51,6 +61,7 @@ public class PNR_EnquirerHttps {
             //httpsURLConnection.setDoOutput(true);
             //httpsURLConnection.setRequestMethod("POST");
             httpsURLConnection.connect();
+            //loopON = true;
 
             /*
             This entire block of statements were commented out as we are passing no parameter (i.e. the PNE) to this url based page
@@ -109,6 +120,7 @@ public class PNR_EnquirerHttps {
                 }
                 bufferedReader.close();
                 httpsURLConnection.disconnect();
+                //loopON = false;
                 logger.info("The extracted details:-");
                 logger.info("Train number : " + trainNumber);
                 logger.info("Train name : " + trainName);
@@ -122,7 +134,7 @@ public class PNR_EnquirerHttps {
 
                 //starting the passenger data processing if everything is working properly
                 List<Passenger> listOfPassengers = new ArrayList<Passenger>();
-                performEnablingFromHere();
+                //performEnablingFromHere();
                 if (numberOfPassengers != 0) {
                     int localPointer = 0;
                     for (; localPointer < passengerDataToBeProcessed.size(); localPointer += 22) {
@@ -146,6 +158,7 @@ public class PNR_EnquirerHttps {
                     final String finalBoardingDate = boardingDate;
                     final String finalDestinationStation = destinationStation;
                     final String finalBoardingStation = boardingStation;
+                    /*
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -166,20 +179,52 @@ public class PNR_EnquirerHttps {
                             });
                         }
                     }).start();
+                    */
+
+                    final java.util.logging.Logger finalLogger = logger;
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            JFrame frame = new JFrame("PNR based ticket details");
+                            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                            frame.setLocationRelativeTo(null);
+                            frame.getContentPane().add(new PNR_Form(requestedPNR, finalTrainNumber, finalTrainName, finalBoardingStation, finalDestinationStation, finalBoardingDate, finalClassOfTravel, finalChartStatus, passengerList).getUI());
+
+                            // Create and set up the content pane.
+                            // Display the window.
+                            frame.pack();
+                            try {
+                                frame.setIconImage(new ImageIcon(Toolkit.getDefaultToolkit().createImage(MainActivity.class.getResource(smallLogoPath))).getImage());
+                            } catch (NullPointerException npe1) {
+                                finalLogger.info("ERROR in loading the image for the frame... NUll pointer exception occurred!");
+                            }
+                            frame.setResizable(false);
+                            frame.setVisible(true);
+                        }
+                    });
                 } else {
                     logger.info("No passengers, so no processing of their data!");
+                    Toolkit.getDefaultToolkit().beep();
+                    JOptionPane.showMessageDialog(null, "PNR record doesn't exist!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 logger.info("No reading of webpage as connection not ok!");
-                performEnablingFromHere();
+                logger.info("Connection response code : "+responseCode);
+                Toolkit.getDefaultToolkit().beep();
+                JOptionPane.showMessageDialog(null, "No Internet Connectivity or the server is down", "Error", JOptionPane.ERROR_MESSAGE);
             }
+            httpsURLConnection.disconnect();
+            //loopON = false;
+            performEnablingFromHere();
         } catch (Exception e) {
             logger.info("Exception in the reading part... \n\tException : " + e);
             performEnablingFromHere();
+            //loopON = false;
         }
     }
 
-    public static void performEnablingFromHere(){
+    public static void performEnablingFromHere() {
         MainActivity.disableAll = false;
         MainActivity.performEnabling();
     }

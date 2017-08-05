@@ -1,16 +1,11 @@
 package com.vv.PNR_Enquiry_IndianRailways;
 
 import com.vv.PNR_Enquiry_IndianRailways.HttpsAcquirer.PNR_EnquirerHttps;
-import jdk.nashorn.internal.objects.NativeUint16Array;
-import sun.applet.Main;
 
 import javax.swing.*;
-import javax.tools.Tool;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.MalformedURLException;
 
 /**
  * @author Vivek
@@ -19,12 +14,20 @@ import java.net.MalformedURLException;
  */
 public class MainActivity extends JFrame {
 
-    static final JTextField textPNR = new JTextField(10);
-    static JButton buttonSearch;
-    static JButton buttonCancel;
-    static JButton buttonReset;
+    private static final JTextField textPNR = new JTextField(10);
+    private static JButton buttonSearch;
+    private static JButton buttonExit;
+    private static JButton buttonReset;
 
     public static boolean disableAll = false;
+    //public final static String smallLogoPath = "/src/main/java/com/vv/PNR_Enquiry_IndianRailways/raw/logoIR_medium256.jpg";
+    //public final static String smallLogoPath = "/com/vv/PNR_Enquiry_IndianRailways/raw/logoIR_medium256.jpg";
+    ////public final static String smallLogoPath = "/logoIR_medium256.jpg"; //image in the resources folder of the project
+    //public final static String smallLogoPath = "/logoIR_full1024.png"; //image in the resources folder of the project
+    public final static String smallLogoPath = "/logoIR_small32.png"; //image in the resources folder of the project
+    public final static String mediumLogoPath = "/logoIR_medium256.png"; //image in the resources folder of the project
+    public final static String bigLogoPath = "/logoIR_full1024.png"; //image in the resources folder of the project
+
 
     public MainActivity() {
         setTitle("PNR Enquirer");
@@ -41,34 +44,42 @@ public class MainActivity extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 final String pnr = textPNR.getText();
-                if (pnr.length()!=0) {
+                if (pnr.length() != 0) {
                     if (isPNR_Valid(pnr)) {
                         try {
-                            if(!disableAll) {
+                            if (!disableAll) {
                                 new Thread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        try {
-                                            disableAll = true;
-                                            performDisabling();
-                                            new PNR_EnquirerHttps(pnr);
-                                        } catch (IOException e1) {
-                                            e1.printStackTrace();
-                                        }
+                                        disableAll = true;
+                                        performDisabling();
+                                        new PNR_EnquirerHttps(pnr);
                                     }
                                 }).start();
                             }
-                        } catch (Exception e1){
-                            System.out.println("Exception occured : "+e1);
+                            /*
+                            if(!disableAll){
+                                disableAll = true;
+                                performDisabling();
+                                //PNR_EnquirerHttps.PNR_EnquirerHttpsRunner(pnr);
+                                new PNR_EnquirerHttps(pnr);
+
+                                /*
+                                while(PNR_EnquirerHttps.loopON){
+
+                                }
+
+                            }
+                            */
+                        } catch (Exception e1) {
+                            System.out.println("Exception occured : " + e1);
                         }
-                    }
-                    else{
+                    } else {
                         System.out.println("Invalid PNR!");
                         Toolkit.getDefaultToolkit().beep();
                         JOptionPane.showMessageDialog(MainActivity.this, "Invalid PNR!!", "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                }
-                else {
+                } else {
                     System.out.println("Empty!");
                     Toolkit.getDefaultToolkit().beep();
                     JOptionPane.showMessageDialog(MainActivity.this, "PNR length can't be 0!!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -77,14 +88,14 @@ public class MainActivity extends JFrame {
         });
         add(buttonSearch);
 
-        buttonCancel = new JButton("CANCEL");
-        buttonCancel.addActionListener(new ActionListener() {
+        buttonExit = new JButton("EXIT");
+        buttonExit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
         });
-        add(buttonCancel);
+        add(buttonExit);
 
         buttonReset = new JButton("RESET");
         buttonReset.addActionListener(new ActionListener() {
@@ -109,17 +120,18 @@ public class MainActivity extends JFrame {
         return isValid;
     }
 
-    private void performDisabling(){
+    public void performDisabling() {
+        System.out.println("Inside the disabling function");
         textPNR.setEnabled(false);
         buttonSearch.setEnabled(false);
-        buttonCancel.setEnabled(false);
+        buttonExit.setEnabled(false);
         buttonReset.setEnabled(false);
     }
 
-    public static void performEnabling(){
+    public static void performEnabling() {
         textPNR.setEnabled(true);
         buttonSearch.setEnabled(true);
-        buttonCancel.setEnabled(true);
+        buttonExit.setEnabled(true);
         buttonReset.setEnabled(true);
     }
 
@@ -130,6 +142,12 @@ public class MainActivity extends JFrame {
                 JFrame frame = new MainActivity();
                 frame.setVisible(true);
                 frame.pack();
+                frame.setLocationRelativeTo(null);
+                try {
+                    frame.setIconImage(new ImageIcon(Toolkit.getDefaultToolkit().createImage(MainActivity.class.getResource(smallLogoPath))).getImage());
+                } catch (Exception npe1) {
+
+                }
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             }
         });
