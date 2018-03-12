@@ -1,8 +1,8 @@
 package com.vv.PNR_Enquiry_IndianRailways.GUI;
 
 import com.vv.PNR_Enquiry_IndianRailways.MapOfClassOfTravel;
-import com.vv.PNR_Enquiry_IndianRailways.Model.Passenger;
-import com.vv.PNR_Enquiry_IndianRailways.Model.PassengerList;
+import com.vv.PNR_Enquiry_IndianRailways.Model.*;
+//import com.vv.PNR_Enquiry_IndianRailways.Model.PassengerList;
 
 import javax.swing.*;
 import java.awt.*;
