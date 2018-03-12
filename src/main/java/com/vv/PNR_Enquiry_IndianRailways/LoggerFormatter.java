@@ -9,12 +9,14 @@ import java.util.logging.*;
  */
 public class LoggerFormatter {
 
-    public static Logger formatTheLoggerOutput(Logger logger){
+    public static Logger formatTheLoggerOutput(Logger logger) {
         Handler handler = new ConsoleHandler();
         handler.setFormatter(new Formatter() {
             @Override
             public String format(LogRecord record) {
-                return record.getSourceClassName()+" :: "+record.getSourceMethodName()+" -- "+record.getMessage()+"\n";
+                //return record.getSourceClassName() + " :: " + record.getSourceMethodName() + " -- " + record.getMessage() + "\n";
+                //changing this line for the DirtyRunner file testing
+                return record.getMessage()+"\n";
             }
         });
         logger.addHandler(handler);

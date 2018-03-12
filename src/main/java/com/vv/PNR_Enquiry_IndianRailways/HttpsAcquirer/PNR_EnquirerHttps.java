@@ -89,29 +89,93 @@ public class PNR_EnquirerHttps {
         try {
             if (responseCode == HttpsURLConnection.HTTP_OK) {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
-                int lineNo = 1, numberOfPassengers = 0;
+                int lineNo = 1, numberOfPassengers = 0, baseLineMark = 0;
                 String trainNumber = "", trainName = "", boardingStation = "", destinationStation = "", boardingDate = "", classOfTravel = "", chartStatus = "";
                 String line;
+                //boolean passengerDetailsReached = false;
                 //StringBuilder passengerDataToBeProcessed = new StringBuilder();
                 ArrayList<String> passengerDataToBeProcessed = new ArrayList<String>();
                 //boolean foundEndingTagTable = false;
-                while ((line = bufferedReader.readLine()) != null) {
+                /*while ((line = bufferedReader.readLine()) != null) {
                     //if(lineNo>=606 && lineNo<=692)
-                    if (lineNo >= 606) {
+                    logger.info("Line number " + lineNo + " --> " + line);
+
+                    //if (lineNo >= 606) {
+                    if (lineNo >= 640) {
+
                         logger.info("Line number " + lineNo + " --> " + line);
-                        if (lineNo >= 670 && line.contains("</table>")) break;
+                        //if (lineNo >= 670 && line.contains("</table>")) break;
+                        //if (lineNo >= 702 && line.contains("</table>")) break;
 
                         //starting the data extraction from this line onwards
-                        if (lineNo == 609) {
+                        //if (lineNo == 609) {
+                        if (lineNo == 643) {
                             trainNumber = line.substring(0, line.indexOf('-')).trim();
                             trainName = line.substring(line.indexOf('-') + 1).trim();
                         }
-                        if (lineNo == 626) boardingStation = line.trim();
-                        if (lineNo == 635) destinationStation = line.trim();
-                        if (lineNo == 642) boardingDate = line.trim();
-                        if (lineNo == 648) classOfTravel = line.trim();
-                        if (lineNo == 654) chartStatus = line.trim();
-                        if (lineNo >= 672) {
+                        //if (lineNo == 626) boardingStation = line.trim();
+                        if (lineNo == 660) boardingStation = line.trim();
+                        //if (lineNo == 635) destinationStation = line.trim();
+                        if (lineNo == 669) destinationStation = line.trim();
+                        //if (lineNo == 642) boardingDate = line.trim();
+                        if (lineNo == 676) boardingDate = line.trim();
+                        //if (lineNo == 648) classOfTravel = line.trim();
+                        if (lineNo == 682) classOfTravel = line.trim();
+                        //if (lineNo == 654) chartStatus = line.trim();
+                        if (lineNo == 688) chartStatus = line.trim();
+                        //if (lineNo >= 672) {
+                        if (lineNo >= 706) {
+                            passengerDataToBeProcessed.add(line.trim());
+                            if (line.contains("</tr>")) numberOfPassengers++;
+                        }
+                    }
+                    lineNo++;
+                }*/
+                while ((line = bufferedReader.readLine()) != null) {
+                    //if(lineNo>=606 && lineNo<=692)
+                    logger.info("Line number " + lineNo + " --> " + line);
+
+                    //if (lineNo >= 606) {
+                    //if (lineNo >= 640) {
+                    if (lineNo >= 600) {
+
+                        logger.info("Line number " + lineNo + " --> " + line);
+                        //if (lineNo >= 670 && line.contains("</table>")) break;
+                        //if (lineNo >= 702 && line.contains("</table>")) break;
+                        if (lineNo >= 700 && line.contains("</table>")) break;
+                        //System.out.println("Passenger details reached status : "+passengerDetailsReached+", at line no : "+lineNo);
+                        //if (passengerDetailsReached && line.contains("</table>")) break;
+
+                        //starting the data extraction from this line onwards
+                        //if (lineNo == 609) {
+                        //if (lineNo == 643) {
+                        if (line.contains("PNR - "+requestedPNR)) {
+                            baseLineMark = lineNo + 3;
+                        }
+                        if (lineNo == baseLineMark) {
+                            System.out.println("PNR first step crossed at line number : "+lineNo+", and the base mark : "+baseLineMark);
+                            trainNumber = line.substring(0, line.indexOf('-')).trim();
+                            trainName = line.substring(line.indexOf('-') + 1).trim();
+                        }
+                        //if (lineNo == 626) boardingStation = line.trim();
+                        //if (lineNo == 660) boardingStation = line.trim();
+                        if (lineNo == baseLineMark + 17) boardingStation = line.trim();
+                        //if (lineNo == 635) destinationStation = line.trim();
+                        //if (lineNo == 669) destinationStation = line.trim();
+                        if (lineNo == baseLineMark + 26) destinationStation = line.trim();
+                        //if (lineNo == 642) boardingDate = line.trim();
+                        //if (lineNo == 676) boardingDate = line.trim();
+                        if (lineNo == baseLineMark + 33) boardingDate = line.trim();
+                        //if (lineNo == 648) classOfTravel = line.trim();
+                        //if (lineNo == 682) classOfTravel = line.trim();
+                        if (lineNo == baseLineMark + 39) classOfTravel = line.trim();
+                        //if (lineNo == 654) chartStatus = line.trim();
+                        //if (lineNo == 688) chartStatus = line.trim();
+                        if (lineNo == baseLineMark + 45) chartStatus = line.trim();
+                        //if (lineNo >= 672) {
+                        //if (lineNo >= 706) {
+                        if (lineNo >= baseLineMark + 63) {
+                            //passengerDetailsReached = true;
                             passengerDataToBeProcessed.add(line.trim());
                             if (line.contains("</tr>")) numberOfPassengers++;
                         }
