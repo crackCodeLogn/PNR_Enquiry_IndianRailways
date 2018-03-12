@@ -33,13 +33,20 @@ public class DirtyRunner {
 
     static ArrayList<String> faultyPNR = new ArrayList<String>();
 
+    /**
+     * This was a ranged sequence in order to facilitate wide analysis of the line numbers and ascertain
+     * whether was the current version of the site, it'll work or break.
+     *
+     * This runs independent from the entire program, and is specifically for tweaking around
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         String startPNR = "8425045200";
         String endPNR = "8425045250";
         long sPNR = Long.parseLong(startPNR);
         long ePNR = Long.parseLong(endPNR);
         int tr = 1;
-
 
         for (; sPNR <= ePNR; sPNR++, tr++) {
             System.out.println("Sending in the entry number : " + tr + " --> " + sPNR);
