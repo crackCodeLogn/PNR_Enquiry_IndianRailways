@@ -25,7 +25,7 @@ public class MapOfClassOfTravel {
 
     public MapOfClassOfTravel(){
         map.put("AC 1-Tier", "1A -- AC First Class; 2-berth, 4-berth");
-        map.put("AC 2-Tier", "2A -- AC 2-Tier; 2-berth, 4-berth");
+        map.put("AC 2-tier", "2A -- AC 2-Tier; 2-berth, 4-berth");
         map.put("AC 3 Tier", "3A -- AC 3-Tier; 2-berth, 6-berth");
         //map.put("FC", "First Class; 2-berth, 4-berth");
         map.put("AC chair Car", "CC -- AC Chair Car; 2-seat, 3-seat");
