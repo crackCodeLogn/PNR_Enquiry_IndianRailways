@@ -265,19 +265,19 @@ public class PNR_EnquirerHttps {
                     Passenger holder = null;
                     String elemental = "";
                     //Extracting the details of the passengers on the ticket
-                    for (; localPointer < passengerDataToBeProcessed.size(); localPointer ++) {
+                    for (; localPointer < passengerDataToBeProcessed.size(); localPointer++) {
                         //for this version of the website, shifting the extraction on the basis of the string
                         //logger.info(passengerDataToBeProcessed.get(localPointer));
-                        if(passengerDataToBeProcessed.get(localPointer).contains("pnr-bold-txt")) {
+                        if (passengerDataToBeProcessed.get(localPointer).contains("pnr-bold-txt")) {
                             elemental = passengerDataToBeProcessed.get(localPointer);
-                            elemental = elemental.substring(elemental.indexOf('>')+1, elemental.lastIndexOf('<')).trim();
+                            elemental = elemental.substring(elemental.indexOf('>') + 1, elemental.lastIndexOf('<')).trim();
                             if (shifter) {
                                 Passenger passenger = new Passenger();
                                 passenger.setNumber(++tr);
                                 holder = passenger;
                                 passenger.setBookingStatus(elemental);
                                 shifter = false;
-                            } else{
+                            } else {
                                 holder.setCurrentStatus(elemental);
                                 listOfPassengers.add(holder);
                                 shifter = true;
