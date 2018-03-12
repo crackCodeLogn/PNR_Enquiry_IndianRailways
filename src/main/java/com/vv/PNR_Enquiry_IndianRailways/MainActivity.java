@@ -120,6 +120,9 @@ public class MainActivity extends JFrame {
         return isValid;
     }
 
+    /**
+     * Locking up the interface whilst the request is being processed
+     */
     public void performDisabling() {
         System.out.println("Inside the disabling function");
         textPNR.setEnabled(false);
@@ -128,6 +131,9 @@ public class MainActivity extends JFrame {
         buttonReset.setEnabled(false);
     }
 
+    /**
+     * Switches on the interface, so that the next input can be taken
+     */
     public static void performEnabling() {
         textPNR.setEnabled(true);
         buttonSearch.setEnabled(true);

@@ -181,7 +181,12 @@ public class PNR_Form {
         gbc.insets = new Insets(5, 10, 8, 200);
         gbc.weightx = 1;
         displayValueClass.setEditable(false);
-        classOfTravel+=" -- "+MapOfClassOfTravel.getMap().get(classOfTravel);
+        //classOfTravel+=" -- "+MapOfClassOfTravel.getMap().get(classOfTravel);
+        try {
+            classOfTravel = MapOfClassOfTravel.getMap().get(classOfTravel);
+        } catch (NullPointerException e){
+            //in case the class of travel is not found in the map, then keep it as it is
+        }
         displayValueClass.setText(classOfTravel);
         mainPanel.add(displayValueClass, gbc);
 
